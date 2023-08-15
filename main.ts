@@ -94,5 +94,27 @@ class AIEditorSettingTab extends PluginSettingTab {
 					this.plugin.settings.openAiApiKey = value;
 					await this.plugin.saveSettings();
 				}));
+
+		new Setting(containerEl)
+			.setName('Summary Prompt')
+			.setDesc('Prompt used to generate a summary for the note')
+			.addText(text => text
+				.setPlaceholder('Enter your prompt')
+				.setValue(this.plugin.settings.summaryPrompt)
+				.onChange(async (value) => {
+					this.plugin.settings.summaryPrompt = value;
+					await this.plugin.saveSettings();
+				}));
+
+		new Setting(containerEl)
+			.setName('Summary prefix')
+			.setDesc('Prefix that put before the AI generated summary')
+			.addText(text => text
+				.setPlaceholder('Enter your prefix')
+				.setValue(this.plugin.settings.summaryHeading)
+				.onChange(async (value) => {
+					this.plugin.settings.summaryHeading = value;
+					await this.plugin.saveSettings();
+				}))
 	}
 }
