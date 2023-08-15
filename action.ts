@@ -1,9 +1,9 @@
 export enum Selection {
-    ALL
+    ALL = 'ALL'
 }
 
 export enum Location {
-    HEAD
+    HEAD = 'HEAD'
 }
 
 export interface UserAction {

@@ -3,12 +3,9 @@ import { ActionHandler } from 'handler';
 import { textCompletion } from 'llm';
 import { App, Editor, MarkdownView, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import { UserAction, Selection, Location } from 'action';
+import { AIEditorSettingTab, AIEditorSettings } from 'settings';
 
 
-export interface AIEditorSettings {
-	openAiApiKey: string;
-	customActions: Array<UserAction>;
-}
 
 const TLDR_ACTION: UserAction = {
 	name: 'TLDR',
@@ -61,31 +58,5 @@ export default class AIEditor extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
-	}
-}
-
-class AIEditorSettingTab extends PluginSettingTab {
-	plugin: AIEditor;
-
-	constructor(app: App, plugin: AIEditor) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
-
-	display(): void {
-		const { containerEl } = this;
-
-		containerEl.empty();
-
-		new Setting(containerEl)
-			.setName('OpenAI API Key')
-			.setDesc('OpenAI API Key')
-			.addText(text => text
-				.setPlaceholder('Enter your API key')
-				.setValue(this.plugin.settings.openAiApiKey)
-				.onChange(async (value) => {
-					this.plugin.settings.openAiApiKey = value;
-					await this.plugin.saveSettings();
-				}));
 	}
 }

@@ -2,7 +2,7 @@ import { UserAction, Selection, Location } from 'action';
 import { ConfirmModal } from 'confirm';
 import { textCompletion } from 'llm';
 import { App, Editor, MarkdownView, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
-import { AIEditorSettings } from 'main';
+import { AIEditorSettings } from 'settings';
 
 export class ActionHandler {
     constructor() {
@@ -23,7 +23,8 @@ export class ActionHandler {
             return editor.getValue();
         }
         else {
-            throw "Not implemented"
+            console.log(`Selection ${sel}`)
+            throw "Selection not implemented"
         }
     }
 
@@ -33,7 +34,7 @@ export class ActionHandler {
             editor.replaceRange(text, editor.getCursor())
         }
         else {
-            throw "Not implemented"
+            throw "Location not implemented"
         }
     }
 
