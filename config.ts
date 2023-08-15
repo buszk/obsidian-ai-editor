@@ -3,4 +3,4 @@ export enum Mode {
     TEST,
 }
 
-export let mode = Mode.PROD;
+export let mode = Mode.TEST;
