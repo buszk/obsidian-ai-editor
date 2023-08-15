@@ -1,6 +1,6 @@
 export enum Mode {
-    PROD,
-    TEST,
+	PROD,
+	TEST,
 }
 
 export let mode = Mode.TEST;
