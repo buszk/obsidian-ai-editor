@@ -1,16 +1,17 @@
+import { ConfirmModal } from 'confirm';
 import { textCompletion } from 'llm';
 import { App, Editor, MarkdownView, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
-
-// Remember to rename these classes and interfaces!
 
 interface AIEditorSettings {
 	openAiApiKey: string;
 	summaryHeading: string;
+	summaryPrompt: string;
 }
 
 const DEFAULT_SETTINGS: AIEditorSettings = {
 	openAiApiKey: '',
-	summaryHeading: '**TL;DR**: '
+	summaryHeading: '**TL;DR**: ',
+	summaryPrompt: 'Summarize the following in a paragraph'
 }
 
 export default class AIEditor extends Plugin {
@@ -34,21 +35,22 @@ export default class AIEditor extends Plugin {
 					new Notice("API key is not set in plugin settings");
 					return;
 				}
-				const prompt = "Summarize the following in a paragraph";
 				const wholeText = editor.getValue()
 				new Notice("Generating summary")
 				let res = "";
 				try {
-					res = await textCompletion(prompt, wholeText, apiKey)
+					res = await textCompletion(this.settings.summaryPrompt, wholeText, apiKey)
 				} catch (error) {
-					console.error("Error calling text completion API:", error);
+					console.error("Error calling text completion API: ", error);
 					new Notice("Error generating text. Please check the plugin console for details.")
 					return;
 				}
-
 				res = this.settings.summaryHeading + res + "\n"
-				editor.setCursor(0, 0)
-				editor.replaceRange(res, editor.getCursor())
+				const modal = new ConfirmModal(this.app, "Check summary", res, () => {
+					editor.setCursor(0, 0)
+					editor.replaceRange(res, editor.getCursor())
+				});
+				modal.open();
 			}
 		});
 
