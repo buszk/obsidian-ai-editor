@@ -62,9 +62,7 @@ export class ActionHandler {
 			);
 			return;
 		}
-		new Notice(textCompleted);
 		const result = action.format.replace("{{result}}", textCompleted);
-		new Notice(result);
 		const modal = new ConfirmModal(app, action.modalTitle, result, () => {
 			this.addToNote(action.loc, result, editor);
 		});

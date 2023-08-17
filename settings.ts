@@ -1,4 +1,4 @@
-import { App, Notice, PluginSettingTab, Setting } from "obsidian";
+import { App, PluginSettingTab, Setting } from "obsidian";
 import AIEditor from "main";
 import {
 	UserAction,
@@ -160,7 +160,6 @@ export class AIEditorSettingTab extends PluginSettingTab {
 					.addOptions(locationDictionary())
 					.setValue(action.loc)
 					.onChange(async (value) => {
-						new Notice(Location[value as keyof typeof Location]);
 						this.plugin.settings.customActions[index].loc =
 							Location[value as keyof typeof Location];
 						await this.plugin.saveSettings();
