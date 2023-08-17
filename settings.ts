@@ -1,12 +1,4 @@
-import {
-	App,
-	Editor,
-	MarkdownView,
-	Notice,
-	Plugin,
-	PluginSettingTab,
-	Setting,
-} from "obsidian";
+import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import AIEditor from "main";
 import {
 	UserAction,

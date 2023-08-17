@@ -1,14 +1,8 @@
-import { ConfirmModal } from "confirm";
 import { ActionHandler } from "handler";
-import { textCompletion } from "llm";
 import {
-	App,
 	Editor,
 	MarkdownView,
-	Notice,
 	Plugin,
-	PluginSettingTab,
-	Setting,
 } from "obsidian";
 import { UserAction, Selection, Location } from "action";
 import { AIEditorSettingTab, AIEditorSettings } from "settings";
