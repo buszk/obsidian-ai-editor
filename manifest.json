@@ -1,7 +1,7 @@
 {
 	"id": "ai-editor",
 	"name": "AI Editor",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"minAppVersion": "0.15.0",
 	"description": "This is a LLM powered plugin for Obsidian.",
 	"author": "Zekun Shen",
