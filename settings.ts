@@ -12,7 +12,7 @@ const DEFAULT_ACTION: UserAction = {
 	name: "Action {{index}}",
 	prompt: "Enter your prompt",
 	sel: Selection.ALL,
-	loc: Location.HEAD,
+	loc: Location.INSERT_HEAD,
 	format: "{{result}}\n",
 	modalTitle: "Check result",
 };
@@ -35,18 +35,15 @@ export class AIEditorSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		new Setting(containerEl)
-			.setName("OpenAI API Key")
-			.setDesc("OpenAI API Key")
-			.addText((text) =>
-				text
-					.setPlaceholder("Enter your API key")
-					.setValue(this.plugin.settings.openAiApiKey)
-					.onChange(async (value) => {
-						this.plugin.settings.openAiApiKey = value;
-						await this.plugin.saveSettings();
-					})
-			);
+		new Setting(containerEl).setName("OpenAI API Key").addText((text) =>
+			text
+				.setPlaceholder("Enter your API key")
+				.setValue(this.plugin.settings.openAiApiKey)
+				.onChange(async (value) => {
+					this.plugin.settings.openAiApiKey = value;
+					await this.plugin.saveSettings();
+				})
+		);
 		this.createButton(
 			containerEl,
 			"Create custom action",
@@ -126,6 +123,10 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(`Action ${index}: Input selection`)
 			.addDropdown((dropdown) => {
+				if (action.sel == undefined) {
+					action.sel = Selection.ALL;
+				}
+				console.log(action.sel.toString());
 				dropdown
 					.addOptions(selectionDictionary())
 					.setValue(action.sel.toString())
@@ -138,9 +139,14 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(`Action ${index}: Output location`)
 			.addDropdown((dropdown) => {
+				if (action.loc == undefined) {
+					action.loc = Location.INSERT_HEAD;
+				}
+				console.log(action.loc.toString());
+				console.log(locationDictionary());
 				dropdown
 					.addOptions(locationDictionary())
-					.setValue(action.loc.toString())
+					.setValue(action.loc)
 					.onChange(async (value) => {
 						new Notice(Location[value as keyof typeof Location]);
 						this.plugin.settings.customActions[index].loc =

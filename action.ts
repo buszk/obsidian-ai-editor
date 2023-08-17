@@ -1,9 +1,12 @@
 export enum Selection {
 	ALL = "ALL",
+	CURSOR = "CURSOR",
 }
 
 export enum Location {
-	HEAD = "HEAD",
+	INSERT_HEAD = "INSERT_HEAD",
+	APPEND_BOTTOM = "APPEND_BOTTOM",
+	REPLACE_CURRENT = "REPLACE_CURRENT",
 }
 
 export interface UserAction {
@@ -16,23 +19,28 @@ export interface UserAction {
 }
 
 const SELECTION_SETTING: { [key: string]: string } = {
-	[Selection.ALL]: "Text the whole document",
+	[Selection.ALL.toString()]: "Select the whole document",
+	[Selection.CURSOR.toString()]: "Input selected text by cursor",
 };
 
 const LOCATION_SETTING: { [key: string]: string } = {
-	[Location.HEAD]: "Add at the head of document",
+	[Location.INSERT_HEAD.toString()]:
+		"Insert at the beginning of the document",
+	[Location.APPEND_BOTTOM.toString()]: "Append to the end of the document",
+	[Location.REPLACE_CURRENT.toString()]: "Replace the current selection",
 };
 
 export function locationDictionary(): { [key: string]: string } {
 	return Object.keys(Location).reduce((obj, key) => {
-		obj[key] = SELECTION_SETTING[key];
+        console.log(key);
+		obj[key] = LOCATION_SETTING[key];
 		return obj;
 	}, {} as { [key: string]: string });
 }
 
 export function selectionDictionary(): { [key: string]: string } {
 	return Object.keys(Selection).reduce((obj, key) => {
-		obj[key] = LOCATION_SETTING[key];
+		obj[key] = SELECTION_SETTING[key];
 		return obj;
 	}, {} as { [key: string]: string });
 }

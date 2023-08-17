@@ -11,7 +11,7 @@ const TLDR_ACTION: UserAction = {
 	name: "TLDR",
 	prompt: "Summarize the following in a paragraph",
 	sel: Selection.ALL,
-	loc: Location.HEAD,
+	loc: Location.INSERT_HEAD,
 	format: "**TL;DR**: {{result}}\n\n",
 	modalTitle: "Check summary",
 };
