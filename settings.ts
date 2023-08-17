@@ -70,14 +70,18 @@ export class AIEditorSettingTab extends PluginSettingTab {
 	createTextSetting(
 		containerEl: HTMLElement,
 		name: string,
+		desc: string,
 		value: string,
 		onSave: (newValue: string) => Promise<void>
 	): void {
-		new Setting(containerEl).setName(name).addTextArea((text) => {
-			text.setValue(value).onChange(async (newValue) => {
-				await onSave(newValue);
+		new Setting(containerEl)
+			.setName(name)
+			.setDesc(desc)
+			.addTextArea((text) => {
+				text.setValue(value).onChange(async (newValue) => {
+					await onSave(newValue);
+				});
 			});
-		});
 	}
 
 	createButton(
@@ -98,30 +102,35 @@ export class AIEditorSettingTab extends PluginSettingTab {
 	): void {
 		this.createTextSetting(
 			containerEl,
-			`Action ${index}: Name`,
+			"Action Name",
+			`Action ${index}`,
 			action.name,
 			async (value) => this.saveSetting(index, "name", value)
 		);
 		this.createTextSetting(
 			containerEl,
-			`Action ${index}: Prompt`,
+			"Prompt",
+			"Prompt for LLM to process your input",
 			action.prompt,
 			async (value) => this.saveSetting(index, "prompt", value)
 		);
 		this.createTextSetting(
 			containerEl,
-			`Action ${index}: Format`,
+			"Output Format",
+			"Format your LLM output. Use {{result}} as placeholder.",
 			action.format,
 			async (value) => this.saveSetting(index, "format", value)
 		);
 		this.createTextSetting(
 			containerEl,
-			`Action ${index}: Modal title`,
+			"Modal title",
+			"Customize your confirmation window title",
 			action.modalTitle,
 			async (value) => this.saveSetting(index, "modalTitle", value)
 		);
 		new Setting(containerEl)
-			.setName(`Action ${index}: Input selection`)
+			.setName("Input selection")
+			.setDesc("What input would be sent to LLM?")
 			.addDropdown((dropdown) => {
 				if (action.sel == undefined) {
 					action.sel = Selection.ALL;
@@ -137,7 +146,10 @@ export class AIEditorSettingTab extends PluginSettingTab {
 					});
 			});
 		new Setting(containerEl)
-			.setName(`Action ${index}: Output location`)
+			.setName("Output location")
+			.setDesc(
+				"Where do you to put the generated output after formatting?"
+			)
 			.addDropdown((dropdown) => {
 				if (action.loc == undefined) {
 					action.loc = Location.INSERT_HEAD;
@@ -156,7 +168,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 			});
 		this.createButton(
 			containerEl,
-			`Action ${index}: Delete`,
+			"Delete the above action",
 			"Delete",
 			async () => {
 				const actionToDelete =
