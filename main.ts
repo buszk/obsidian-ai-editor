@@ -27,9 +27,6 @@ export default class AIEditor extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
-		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		let statusBarItemEl = this.addStatusBarItem();
-		statusBarItemEl.setText("AI");
 		let handler = new ActionHandler();
 
 		this.settings.customActions.forEach((action) => {
