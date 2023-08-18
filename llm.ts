@@ -1,12 +1,12 @@
 import { Configuration, OpenAIApi } from "openai";
-import { mode, Mode } from "config";
+import { is_test_mode } from "config";
 
 export async function textCompletion(
 	prompt: string,
 	input: string,
 	apiKey: string
 ) {
-	if (mode != Mode.PROD) {
+	if (is_test_mode()) {
 		return "Some text for testing";
 	}
 	const configuration = new Configuration({
@@ -26,7 +26,7 @@ export async function textCompletion(
 				{ role: "user", content: input },
 			],
 		},
-		{ timeout: 60000 }
+		{ timeout: 10000 }
 	);
 	return response.data.choices[0].message.content.trim();
 }
