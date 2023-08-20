@@ -34,6 +34,9 @@ export class ActionHandler {
 		} else if (loc == Location.APPEND_BOTTOM) {
 			editor.setCursor(editor.lastLine());
 			editor.replaceRange(text, editor.getCursor());
+		} else if (loc == Location.APPEND_CURRENT) {
+			text = editor.getSelection() + text;
+			editor.replaceSelection(text);
 		} else if (loc == Location.REPLACE_CURRENT) {
 			editor.replaceSelection(text);
 		} else {
@@ -51,7 +54,7 @@ export class ActionHandler {
 		console.log(editor.getSelection());
 		const apiKey = this.getAPIKey(settings);
 		const text = this.getTextInput(action.sel, editor);
-		new Notice("Generating summary");
+		new Notice("Querying OpenAI API...");
 		let textCompleted = "";
 		try {
 			textCompleted = await textCompletion(action.prompt, text, apiKey);

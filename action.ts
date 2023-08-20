@@ -6,6 +6,7 @@ export enum Selection {
 export enum Location {
 	INSERT_HEAD = "INSERT_HEAD",
 	APPEND_BOTTOM = "APPEND_BOTTOM",
+	APPEND_CURRENT = "APPEND_CURRENT",
 	REPLACE_CURRENT = "REPLACE_CURRENT",
 }
 
@@ -27,6 +28,7 @@ const LOCATION_SETTING: { [key: string]: string } = {
 	[Location.INSERT_HEAD.toString()]:
 		"Insert at the beginning of the document",
 	[Location.APPEND_BOTTOM.toString()]: "Append to the end of the document",
+	[Location.APPEND_CURRENT.toString()]: "Append to the end of current selection",
 	[Location.REPLACE_CURRENT.toString()]: "Replace the current selection",
 };
 
