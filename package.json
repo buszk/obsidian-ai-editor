@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"yarn_build": "yarn run build --if-present",
 		"version": "node version-bump.mjs && git add manifest.json versions.json package.json"
 	},
 	"keywords": [],

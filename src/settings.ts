@@ -1,5 +1,5 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
-import AIEditor from "main";
+import AIEditor from "src/main";
 import {
 	UserAction,
 	Selection,
@@ -53,7 +53,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 				this.display();
 			}
 		);
-		this.plugin.settings.customActions.forEach((action, index) => {
+		this.plugin.settings.customActions.forEach((action: UserAction, index: number) => {
 			this.newAction(containerEl, action, index);
 		});
 	}

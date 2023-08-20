@@ -28,5 +28,6 @@ export async function textCompletion(
 		},
 		{ timeout: 10000 }
 	);
-	return response.data.choices[0].message.content.trim();
+	// Safely get response.data.choices[0].message.content.trim() considering undefined
+	return response.data.choices?.[0]?.message?.content?.trim();
 }
