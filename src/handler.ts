@@ -1,8 +1,8 @@
-import { UserAction, Selection, Location } from "action";
-import { ConfirmModal } from "confirm";
-import { textCompletion } from "llm";
+import { UserAction, Selection, Location } from "src/action";
+import { ConfirmModal } from "src/confirm";
+import { textCompletion } from "src/llm";
 import { App, Editor, MarkdownView, Notice } from "obsidian";
-import { AIEditorSettings } from "settings";
+import { AIEditorSettings } from "src/settings";
 
 export class ActionHandler {
 	constructor() {}
@@ -44,6 +44,24 @@ export class ActionHandler {
 		}
 	}
 
+	async _textCompletion(
+		prompt: string,
+		text: string,
+		apiKey: string
+	): Promise<string | undefined> {
+		let textCompleted = undefined;
+		try {
+			textCompleted = await textCompletion(prompt, text, apiKey);
+		} catch (error) {
+			console.error("Error calling text completion API: ", error);
+			new Notice(
+				"Error generating text. Please check the plugin console for details."
+			);
+		}
+		return textCompleted;
+
+	}
+
 	async process(
 		app: App,
 		settings: AIEditorSettings,
@@ -54,21 +72,14 @@ export class ActionHandler {
 		console.log(editor.getSelection());
 		const apiKey = this.getAPIKey(settings);
 		const text = this.getTextInput(action.sel, editor);
-		new Notice("Querying OpenAI API...");
-		let textCompleted = "";
-		try {
-			textCompleted = await textCompletion(action.prompt, text, apiKey);
-		} catch (error) {
-			console.error("Error calling text completion API: ", error);
-			new Notice(
-				"Error generating text. Please check the plugin console for details."
-			);
-			return;
+		new Notice("Please wait... Querying OpenAI API...");
+		const textCompleted = await this._textCompletion(action.prompt, text, apiKey);
+		if (textCompleted) {
+			const result = action.format.replace("{{result}}", textCompleted);
+			const modal = new ConfirmModal(app, action.modalTitle, result, () => {
+				this.addToNote(action.loc, result, editor);
+			});
+			modal.open();
 		}
-		const result = action.format.replace("{{result}}", textCompleted);
-		const modal = new ConfirmModal(app, action.modalTitle, result, () => {
-			this.addToNote(action.loc, result, editor);
-		});
-		modal.open();
 	}
 }

@@ -6,7 +6,7 @@ import {
 	Location,
 	locationDictionary,
 	selectionDictionary,
-} from "action";
+} from "src/action";
 
 const DEFAULT_ACTION: UserAction = {
 	name: "Action {{index}}",
