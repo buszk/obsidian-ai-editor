@@ -1,10 +1,10 @@
 {
 	"id": "ai-editor",
 	"name": "AI Editor",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"minAppVersion": "0.15.0",
-	"description": "This is a LLM powered plugin for Obsidian.",
+	"description": "Empower your note editor with LLM capabilities. Customizable to work for your use cases.",
 	"author": "Zekun Shen",
 	"authorUrl": "https://github.com/buszk",
-	"isDesktopOnly": false
+	"isDesktopOnly": true
 }
