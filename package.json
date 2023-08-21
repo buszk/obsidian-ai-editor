@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-ai-editor",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "AI-powered Text Editor",
 	"main": "main.js",
 	"scripts": {
