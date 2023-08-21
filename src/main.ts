@@ -1,21 +1,12 @@
 import { ActionHandler } from "src/handler";
 import { Editor, MarkdownView, Plugin } from "obsidian";
-import { UserAction, Selection, Location } from "src/action";
 import { AIEditorSettingTab, AIEditorSettings } from "src/settings";
-
-const TLDR_ACTION: UserAction = {
-	name: "TLDR",
-	prompt: "Summarize the following in a paragraph",
-	sel: Selection.ALL,
-	loc: Location.INSERT_HEAD,
-	format: "**TL;DR**: {{result}}\n\n",
-	modalTitle: "Check summary",
-};
+import { DEFAULT_ACTIONS } from "src/preset";
 
 const DEFAULT_SETTINGS: AIEditorSettings = {
 	openAiApiKey: "",
 	testingMode: false,
-	customActions: [TLDR_ACTION],
+	customActions: DEFAULT_ACTIONS,
 };
 
 export default class AIEditor extends Plugin {
