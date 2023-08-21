@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import AIEditor from "src/main";
 import {
 	UserAction,
@@ -81,6 +81,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 	): Promise<void> {
 		this.plugin.settings.customActions[index][key] = value;
 		await this.plugin.saveSettings();
+		this.plugin.registerActions();
 	}
 
 	createTextSetting(
