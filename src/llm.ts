@@ -1,12 +1,12 @@
 import { Configuration, OpenAIApi } from "openai";
-import { is_test_mode } from "src/config";
 
 export async function textCompletion(
 	prompt: string,
 	input: string,
-	apiKey: string
+	apiKey: string,
+	testingMode: boolean = false
 ): Promise<string | undefined> {
-	if (is_test_mode()) {
+	if (testingMode) {
 		return "Some text for testing";
 	}
 	const configuration = new Configuration({

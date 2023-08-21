@@ -1,9 +1,5 @@
 import { ActionHandler } from "src/handler";
-import {
-	Editor,
-	MarkdownView,
-	Plugin,
-} from "obsidian";
+import { Editor, MarkdownView, Plugin } from "obsidian";
 import { UserAction, Selection, Location } from "src/action";
 import { AIEditorSettingTab, AIEditorSettings } from "src/settings";
 
@@ -18,6 +14,7 @@ const TLDR_ACTION: UserAction = {
 
 const DEFAULT_SETTINGS: AIEditorSettings = {
 	openAiApiKey: "",
+	testingMode: false,
 	customActions: [TLDR_ACTION],
 };
 

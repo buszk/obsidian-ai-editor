@@ -19,6 +19,7 @@ const DEFAULT_ACTION: UserAction = {
 
 export interface AIEditorSettings {
 	openAiApiKey: string;
+	testingMode: boolean;
 	customActions: Array<UserAction>;
 }
 
@@ -44,6 +45,19 @@ export class AIEditorSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				})
 		);
+		new Setting(containerEl)
+			.setName("Testing mode")
+			.setDesc(
+				"Use testing mode to test custom action without calling to OpenAI API"
+			)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.testingMode)
+					.onChange(async (value) => {
+						this.plugin.settings.testingMode = value;
+						await this.plugin.saveSettings();
+					})
+			);
 		this.createButton(
 			containerEl,
 			"Create custom action",
@@ -53,9 +67,11 @@ export class AIEditorSettingTab extends PluginSettingTab {
 				this.display();
 			}
 		);
-		this.plugin.settings.customActions.forEach((action: UserAction, index: number) => {
-			this.newAction(containerEl, action, index);
-		});
+		this.plugin.settings.customActions.forEach(
+			(action: UserAction, index: number) => {
+				this.newAction(containerEl, action, index);
+			}
+		);
 	}
 
 	async saveSetting<T extends keyof UserAction>(

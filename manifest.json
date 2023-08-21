@@ -6,5 +6,5 @@
 	"description": "Empower your note editor with LLM capabilities. Customizable to work for your use cases.",
 	"author": "Zekun Shen",
 	"authorUrl": "https://github.com/buszk",
-	"isDesktopOnly": true
+	"isDesktopOnly": false
 }

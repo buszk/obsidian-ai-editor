@@ -47,11 +47,17 @@ export class ActionHandler {
 	async _textCompletion(
 		prompt: string,
 		text: string,
-		apiKey: string
+		apiKey: string,
+		testingMode: boolean = false
 	): Promise<string | undefined> {
 		let textCompleted = undefined;
 		try {
-			textCompleted = await textCompletion(prompt, text, apiKey);
+			textCompleted = await textCompletion(
+				prompt,
+				text,
+				apiKey,
+				testingMode
+			);
 		} catch (error) {
 			console.error("Error calling text completion API: ", error);
 			new Notice(
@@ -59,7 +65,6 @@ export class ActionHandler {
 			);
 		}
 		return textCompleted;
-
 	}
 
 	async process(
@@ -73,12 +78,22 @@ export class ActionHandler {
 		const apiKey = this.getAPIKey(settings);
 		const text = this.getTextInput(action.sel, editor);
 		new Notice("Please wait... Querying OpenAI API...");
-		const textCompleted = await this._textCompletion(action.prompt, text, apiKey);
+		const textCompleted = await this._textCompletion(
+			action.prompt,
+			text,
+			apiKey,
+			settings.testingMode
+		);
 		if (textCompleted) {
 			const result = action.format.replace("{{result}}", textCompleted);
-			const modal = new ConfirmModal(app, action.modalTitle, result, () => {
-				this.addToNote(action.loc, result, editor);
-			});
+			const modal = new ConfirmModal(
+				app,
+				action.modalTitle,
+				result,
+				() => {
+					this.addToNote(action.loc, result, editor);
+				}
+			);
 			modal.open();
 		}
 	}
