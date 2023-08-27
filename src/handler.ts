@@ -78,12 +78,16 @@ export class ActionHandler {
 		const apiKey = this.getAPIKey(settings);
 		const text = this.getTextInput(action.sel, editor);
 		new Notice("Please wait... Querying OpenAI API...");
+
+		const spinner = view.contentEl.createEl("div", { cls: "loader" });
 		const textCompleted = await this._textCompletion(
 			action.prompt,
 			text,
 			apiKey,
 			settings.testingMode
 		);
+		spinner.remove();
+
 		if (textCompleted) {
 			const result = action.format.replace("{{result}}", textCompleted);
 			const modal = new ConfirmModal(

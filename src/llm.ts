@@ -26,7 +26,7 @@ export async function textCompletion(
 				{ role: "user", content: input },
 			],
 		},
-		{ timeout: 10000 }
+		{ timeout: 15000 }
 	);
 	// Safely get response.data.choices[0].message.content.trim() considering undefined
 	return response.data.choices?.[0]?.message?.content?.trim();
