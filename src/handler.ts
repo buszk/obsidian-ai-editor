@@ -1,6 +1,6 @@
 import { UserAction, Selection, Location } from "src/action";
 import { ConfirmModal } from "src/confirm";
-import { textCompletion } from "src/llm";
+import { textCompletionStreaming } from "src/llm";
 import { App, Editor, MarkdownView, Notice } from "obsidian";
 import { AIEditorSettings } from "src/settings";
 
@@ -44,18 +44,20 @@ export class ActionHandler {
 		}
 	}
 
-	async _textCompletion(
+	async _textCompletionStreaming(
 		prompt: string,
 		text: string,
 		apiKey: string,
+		callback: (text: string) => void,
 		testingMode: boolean = false
-	): Promise<string | undefined> {
+	) {
 		let textCompleted = undefined;
 		try {
-			textCompleted = await textCompletion(
+			textCompleted = await textCompletionStreaming(
 				prompt,
 				text,
 				apiKey,
+				callback,
 				testingMode
 			);
 		} catch (error) {
@@ -64,7 +66,6 @@ export class ActionHandler {
 				"Error generating text. Please check the plugin console for details."
 			);
 		}
-		return textCompleted;
 	}
 
 	async process(
@@ -80,25 +81,30 @@ export class ActionHandler {
 		new Notice("Please wait... Querying OpenAI API...");
 
 		const spinner = view.contentEl.createEl("div", { cls: "loader" });
-		const textCompleted = await this._textCompletion(
+
+		const modal = new ConfirmModal(
+			app,
+			action.modalTitle,
+			(text: string) => action.format.replace("{{result}}", text),
+			(result: string) => {
+				this.addToNote(action.loc, result, editor);
+			}
+		);
+		let modalDisplayed = false;
+		await this._textCompletionStreaming(
 			action.prompt,
 			text,
 			apiKey,
+			(token) => {
+				if (!modalDisplayed) {
+					modalDisplayed = true;
+					modal.open();
+					spinner.remove();
+				}
+				modal.addToken(token);
+			},
 			settings.testingMode
 		);
 		spinner.remove();
-
-		if (textCompleted) {
-			const result = action.format.replace("{{result}}", textCompleted);
-			const modal = new ConfirmModal(
-				app,
-				action.modalTitle,
-				result,
-				() => {
-					this.addToNote(action.loc, result, editor);
-				}
-			);
-			modal.open();
-		}
 	}
 }
