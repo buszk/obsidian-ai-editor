@@ -2,15 +2,16 @@ import { App, Modal, Setting } from "obsidian";
 
 export class ConfirmModal extends Modal {
 	title: string;
-	format: (text: string) => string;
-	text: string;
+	format: (generated: string) => string;
+	generated: string;
+	editMode: boolean = false;
 
 	onAccept: (result: string) => void;
 
 	constructor(
 		app: App,
 		title: string,
-		format: (text: string) => string,
+		format: (generated: string) => string,
 		onAccept: (result: string) => void,
 		initial_text: string = ""
 	) {
@@ -18,7 +19,7 @@ export class ConfirmModal extends Modal {
 		this.onAccept = onAccept;
 		this.title = title;
 		this.format = format;
-		this.text = initial_text;
+		this.generated = initial_text;
 	}
 
 	onOpen() {
@@ -26,7 +27,22 @@ export class ConfirmModal extends Modal {
 
 		contentEl.createEl("h1", { text: this.title });
 		contentEl.createEl("hr");
-		contentEl.createEl("p", { text: this.format(this.text) });
+
+		let textEl: HTMLElement;
+		if (this.editMode) {
+			textEl = contentEl.createEl("textarea", {
+				text: this.format(this.generated),
+				attr: {
+					style: "width: 100%",
+					rows: "9",
+					oninput: "this.innerHTML = this.value",
+				},
+			});
+		} else {
+			textEl = contentEl.createEl("p", {
+				text: this.format(this.generated),
+			});
+		}
 		contentEl.createEl("br");
 
 		new Setting(contentEl)
@@ -36,8 +52,15 @@ export class ConfirmModal extends Modal {
 					.setCta()
 					.onClick(() => {
 						this.close();
-						this.onAccept(this.format(this.text));
+						this.onAccept(textEl.innerText);
 					})
+			)
+			.addButton((btn) =>
+				btn.setButtonText("Edit").onClick(() => {
+					this.editMode = true;
+					this.onClose();
+					this.onOpen();
+				})
 			)
 			.addButton((btn) =>
 				btn.setButtonText("Ignore").onClick(() => {
@@ -47,7 +70,7 @@ export class ConfirmModal extends Modal {
 	}
 
 	addToken(token: string) {
-		this.text = this.text + token;
+		this.generated = this.generated + token;
 		this.contentEl.empty();
 		this.onOpen();
 	}
