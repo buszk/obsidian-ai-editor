@@ -1,12 +1,7 @@
 import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import AIEditor from "src/main";
-import {
-	UserAction,
-	Selection,
-	Location,
-	locationDictionary,
-	selectionDictionary,
-} from "src/action";
+import { UserAction, Selection, Location } from "src/action";
+import { ActionEditModal } from "./action_editor";
 
 const DEFAULT_ACTION: UserAction = {
 	name: "Action {{index}}",
@@ -35,6 +30,8 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 
 		containerEl.empty();
+
+		containerEl.createEl("h1", { text: "Common Settings" });
 
 		new Setting(containerEl).setName("OpenAI API Key").addText((text) =>
 			text
@@ -67,38 +64,12 @@ export class AIEditorSettingTab extends PluginSettingTab {
 				this.display();
 			}
 		);
+		containerEl.createEl("h1", { text: "Custom actions" });
 		this.plugin.settings.customActions.forEach(
 			(action: UserAction, index: number) => {
 				this.newAction(containerEl, action, index);
 			}
 		);
-	}
-
-	async saveSetting<T extends keyof UserAction>(
-		index: number,
-		key: T,
-		value: UserAction[T]
-	): Promise<void> {
-		this.plugin.settings.customActions[index][key] = value;
-		await this.plugin.saveSettings();
-		this.plugin.registerActions();
-	}
-
-	createTextSetting(
-		containerEl: HTMLElement,
-		name: string,
-		desc: string,
-		value: string,
-		onSave: (newValue: string) => Promise<void>
-	): void {
-		new Setting(containerEl)
-			.setName(name)
-			.setDesc(desc)
-			.addTextArea((text) => {
-				text.setValue(value).onChange(async (newValue) => {
-					await onSave(newValue);
-				});
-			});
 	}
 
 	createButton(
@@ -117,85 +88,32 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		action: UserAction,
 		index: number
 	): void {
-		this.createTextSetting(
-			containerEl,
-			"Action Name",
-			`Action ${index}`,
-			action.name,
-			async (value) => this.saveSetting(index, "name", value)
-		);
-		this.createTextSetting(
-			containerEl,
-			"Prompt",
-			"Prompt for LLM to process your input",
-			action.prompt,
-			async (value) => this.saveSetting(index, "prompt", value)
-		);
-		this.createTextSetting(
-			containerEl,
-			"Output Format",
-			"Format your LLM output. Use {{result}} as placeholder.",
-			action.format,
-			async (value) => this.saveSetting(index, "format", value)
-		);
-		this.createTextSetting(
-			containerEl,
-			"Modal title",
-			"Customize your confirmation window title",
-			action.modalTitle,
-			async (value) => this.saveSetting(index, "modalTitle", value)
-		);
-		new Setting(containerEl)
-			.setName("Input selection")
-			.setDesc("What input would be sent to LLM?")
-			.addDropdown((dropdown) => {
-				if (action.sel == undefined) {
-					action.sel = Selection.ALL;
-				}
-				console.log(action.sel.toString());
-				dropdown
-					.addOptions(selectionDictionary())
-					.setValue(action.sel.toString())
-					.onChange(async (value) => {
-						this.plugin.settings.customActions[index].sel =
-							Selection[value as keyof typeof Selection];
+		this.createButton(containerEl, action.name, "Edit", async () => {
+			const userAction = this.plugin.settings.customActions.at(index);
+			if (userAction != undefined) {
+				new ActionEditModal(
+					this.app,
+					userAction,
+					async (action: UserAction) => {
+						this.plugin.settings.customActions[index] = action;
 						await this.plugin.saveSettings();
-					});
-			});
-		new Setting(containerEl)
-			.setName("Output location")
-			.setDesc(
-				"Where do you to put the generated output after formatting?"
-			)
-			.addDropdown((dropdown) => {
-				if (action.loc == undefined) {
-					action.loc = Location.INSERT_HEAD;
-				}
-				console.log(action.loc.toString());
-				console.log(locationDictionary());
-				dropdown
-					.addOptions(locationDictionary())
-					.setValue(action.loc)
-					.onChange(async (value) => {
-						this.plugin.settings.customActions[index].loc =
-							Location[value as keyof typeof Location];
-						await this.plugin.saveSettings();
-					});
-			});
-		this.createButton(
-			containerEl,
-			"Delete the above action",
-			"Delete",
-			async () => {
-				const actionToDelete =
-					this.plugin.settings.customActions.at(index);
-				if (actionToDelete != undefined) {
-					this.plugin.settings.customActions.remove(actionToDelete);
-					await this.plugin.saveSettings();
-				}
-				this.display();
+						this.plugin.registerActions();
+						this.display();
+					},
+					async () => {
+						const actionToDelete =
+							this.plugin.settings.customActions.at(index);
+						if (actionToDelete != undefined) {
+							this.plugin.settings.customActions.remove(
+								actionToDelete
+							);
+							await this.plugin.saveSettings();
+						}
+						this.display();
+					}
+				).open();
 			}
-		);
+		});
 	}
 
 	async createAction() {
@@ -204,5 +122,6 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		newAction.name = newAction.name.replace("{{index}}", rand.toString());
 		this.plugin.settings.customActions.push(newAction);
 		await this.plugin.saveSettings();
+		this.plugin.registerActions();
 	}
 }
