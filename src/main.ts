@@ -15,7 +15,7 @@ export default class AIEditor extends Plugin {
 
 	registerActions() {
 		let actions = this.settings.customActions;
-		let handler = new ActionHandler();
+		let handler = new ActionHandler(this.settings);
 		actions.forEach((action, i) => {
 			this.addCommand({
 				// When user edit the settings, this method is called to updated command.

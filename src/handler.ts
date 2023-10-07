@@ -1,11 +1,15 @@
 import { UserAction, Selection, Location } from "src/action";
 import { ConfirmModal } from "src/confirm";
-import { textCompletionStreaming } from "src/llm";
 import { App, Editor, MarkdownView, Notice } from "obsidian";
 import { AIEditorSettings } from "src/settings";
+import { LLMFactory } from "./llm/factory";
 
 export class ActionHandler {
-	constructor() {}
+	llmFactory: LLMFactory;
+
+	constructor(settings: AIEditorSettings) {
+		this.llmFactory = new LLMFactory(settings);
+	}
 
 	getAPIKey(settings: AIEditorSettings) {
 		const apiKey = settings.openAiApiKey;
@@ -44,30 +48,6 @@ export class ActionHandler {
 		}
 	}
 
-	async _textCompletionStreaming(
-		prompt: string,
-		text: string,
-		apiKey: string,
-		callback: (text: string) => void,
-		testingMode: boolean = false
-	) {
-		let textCompleted = undefined;
-		try {
-			textCompleted = await textCompletionStreaming(
-				prompt,
-				text,
-				apiKey,
-				callback,
-				testingMode
-			);
-		} catch (error) {
-			console.error("Error calling text completion API: ", error);
-			new Notice(
-				"Error generating text. Please check the plugin console for details."
-			);
-		}
-	}
-
 	async process(
 		app: App,
 		settings: AIEditorSettings,
@@ -76,7 +56,6 @@ export class ActionHandler {
 		view: MarkdownView
 	) {
 		console.log(editor.getSelection());
-		const apiKey = this.getAPIKey(settings);
 		const text = this.getTextInput(action.sel, editor);
 		new Notice("Please wait... Querying OpenAI API...");
 
@@ -91,20 +70,23 @@ export class ActionHandler {
 			}
 		);
 		let modalDisplayed = false;
-		await this._textCompletionStreaming(
-			action.prompt,
-			text,
-			apiKey,
-			(token) => {
-				if (!modalDisplayed) {
-					modalDisplayed = true;
-					modal.open();
-					spinner.remove();
+		try {
+			const llm = this.llmFactory.createLLM(action);
+			await llm.autocompleteStreaming(
+				action.prompt + "\n" + text,
+				(token) => {
+					if (!modalDisplayed) {
+						modalDisplayed = true;
+						modal.open();
+						spinner.remove();
+					}
+					modal.addToken(token);
 				}
-				modal.addToken(token);
-			},
-			settings.testingMode
-		);
+			);
+		} catch (error) {
+			console.log(error);
+			new Notice(`Autocomplete error:\n${error}`);
+		}
 		spinner.remove();
 	}
 }
