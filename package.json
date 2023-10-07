@@ -23,6 +23,7 @@
 	},
 	"dependencies": {
 		"openai": "^3.2.1",
-		"langchain": "^0.0.156"
+		"langchain": "^0.0.156",
+		"zod": ">=3.22.3"
 	}
 }
