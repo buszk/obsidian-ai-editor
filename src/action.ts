@@ -34,7 +34,6 @@ const LOCATION_SETTING: { [key: string]: string } = {
 
 export function locationDictionary(): { [key: string]: string } {
 	return Object.keys(Location).reduce((obj, key) => {
-        console.log(key);
 		obj[key] = LOCATION_SETTING[key];
 		return obj;
 	}, {} as { [key: string]: string });

@@ -90,8 +90,6 @@ export class ActionEditModal extends Modal {
 				if (this.action.loc == undefined) {
 					this.action.loc = Location.INSERT_HEAD;
 				}
-				console.log(this.action.loc.toString());
-				console.log(locationDictionary());
 				dropdown
 					.addOptions(locationDictionary())
 					.setValue(this.action.loc)
