@@ -1,4 +1,5 @@
 import { UserAction, Selection, Location } from "src/action";
+import { OpenAIModel } from "./llm/openai_llm";
 
 export const SUMMARY_DOC_ACTION: UserAction = {
 	name: "Summarize document",
@@ -7,6 +8,7 @@ export const SUMMARY_DOC_ACTION: UserAction = {
 	loc: Location.INSERT_HEAD,
 	format: "**Summary**: {{result}}\n\n",
 	modalTitle: "Check summary",
+	model: OpenAIModel.GPT_3_5,
 };
 
 export const COMPLETION_ACTION: UserAction = {
@@ -16,6 +18,7 @@ export const COMPLETION_ACTION: UserAction = {
 	loc: Location.APPEND_CURRENT,
 	format: "{{result}}",
 	modalTitle: "Check result",
+	model: OpenAIModel.GPT_3_5,
 };
 
 export const REWRITE_ACTION: UserAction = {
@@ -25,21 +28,23 @@ export const REWRITE_ACTION: UserAction = {
 	loc: Location.REPLACE_CURRENT,
 	format: "{{result}}",
 	modalTitle: "Check result",
+	model: OpenAIModel.GPT_3_5,
 };
 
 export const HASHTAG_ACTION: UserAction = {
-    name: "Generate hashtags",
-    prompt: "Generate hashtags for the following text",
-    sel: Selection.ALL,
-    loc: Location.APPEND_BOTTOM,
-    format: "\n{{result}}",
-    modalTitle: "Check result",
-}
+	name: "Generate hashtags",
+	prompt: "Generate hashtags for the following text",
+	sel: Selection.ALL,
+	loc: Location.APPEND_BOTTOM,
+	format: "\n{{result}}",
+	modalTitle: "Check result",
+	model: OpenAIModel.GPT_3_5,
+};
 
 // Default actions
 export const DEFAULT_ACTIONS: Array<UserAction> = [
 	SUMMARY_DOC_ACTION,
 	COMPLETION_ACTION,
 	REWRITE_ACTION,
-    HASHTAG_ACTION
+	HASHTAG_ACTION,
 ];

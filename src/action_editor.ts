@@ -5,7 +5,9 @@ import {
 	Selection,
 	Location,
 	locationDictionary,
+	modelDictionary,
 } from "./action";
+import { OpenAIModel } from "./llm/openai_llm";
 
 export class ActionEditModal extends Modal {
 	action: UserAction;
@@ -37,6 +39,22 @@ export class ActionEditModal extends Modal {
 				this.action.name = value;
 			}
 		);
+
+		new Setting(contentEl)
+			.setName("LLM Model selection")
+			.setDesc("What model would be used to process your input")
+			.addDropdown((dropdown) => {
+				if (this.action.model == undefined) {
+					this.action.model = OpenAIModel.GPT_3_5;
+				}
+				dropdown
+					.addOptions(modelDictionary())
+					.setValue(this.action.model.toString())
+					.onChange((value) => {
+						this.action.model = value as OpenAIModel;
+					});
+			});
+
 		this.createTextSetting(
 			contentEl,
 			"Prompt",
@@ -64,7 +82,6 @@ export class ActionEditModal extends Modal {
 				this.action.modalTitle = value;
 			}
 		);
-
 		new Setting(contentEl)
 			.setName("Input selection")
 			.setDesc("What input would be sent to LLM?")
@@ -76,9 +93,9 @@ export class ActionEditModal extends Modal {
 				dropdown
 					.addOptions(selectionDictionary())
 					.setValue(this.action.sel.toString())
-					.onChange(async (value) => {
+					.onChange((value) => {
 						this.action.sel =
-							Selection[value as keyof typeof Selection];
+							value as  Selection;
 					});
 			});
 		new Setting(contentEl)
@@ -93,9 +110,9 @@ export class ActionEditModal extends Modal {
 				dropdown
 					.addOptions(locationDictionary())
 					.setValue(this.action.loc)
-					.onChange(async (value) => {
+					.onChange((value) => {
 						this.action.loc =
-							Location[value as keyof typeof Location];
+							value as  Location;
 					});
 			});
 
@@ -114,7 +131,8 @@ export class ActionEditModal extends Modal {
 					.setButtonText("Save")
 					.setCta()
 					.onClick(async () => {
-						this.onSave(this.action);
+						await this.onSave(this.action);
+						console.log(this.action);
 						this.close();
 					});
 			});

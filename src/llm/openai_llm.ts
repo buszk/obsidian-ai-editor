@@ -5,6 +5,10 @@ const queryTimeout = 15000;
 
 export enum OpenAIModel {
 	GPT_3_5 = "gpt-3.5-turbo",
+	GPT_3_5_16k = "gpt-3.5-turbo-16k",
+	GPT_3_5_INSTRUCT = "gpt-3.5-turbo-instruct",
+	GPT_4 = "gpt-4",
+	GPT_4_32K = "gpt-4-32k",
 }
 
 export class OpenAILLM extends LLM {

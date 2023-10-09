@@ -1,3 +1,5 @@
+import { OpenAIModel } from "./llm/openai_llm";
+
 export enum Selection {
 	ALL = "ALL",
 	CURSOR = "CURSOR",
@@ -10,6 +12,8 @@ export enum Location {
 	REPLACE_CURRENT = "REPLACE_CURRENT",
 }
 
+export type Model = OpenAIModel | {};
+
 export interface UserAction {
 	name: string;
 	prompt: string;
@@ -17,6 +21,7 @@ export interface UserAction {
 	loc: Location;
 	format: string;
 	modalTitle: string;
+	model: Model;
 }
 
 const SELECTION_SETTING: { [key: string]: string } = {
@@ -28,20 +33,36 @@ const LOCATION_SETTING: { [key: string]: string } = {
 	[Location.INSERT_HEAD.toString()]:
 		"Insert at the beginning of the document",
 	[Location.APPEND_BOTTOM.toString()]: "Append to the end of the document",
-	[Location.APPEND_CURRENT.toString()]: "Append to the end of current selection",
+	[Location.APPEND_CURRENT.toString()]:
+		"Append to the end of current selection",
 	[Location.REPLACE_CURRENT.toString()]: "Replace the current selection",
 };
 
+const MODEL_NAMES: { [key: string]: string } = {
+	[OpenAIModel.GPT_3_5]: "OpenAI GPT-3.5",
+	[OpenAIModel.GPT_3_5_16k]: "OpenAI GPT-3.5-16k",
+	[OpenAIModel.GPT_3_5_INSTRUCT]: "OpenAI GPT-3.5-instruct",
+	[OpenAIModel.GPT_4]: "OpenAI GPT-4",
+	[OpenAIModel.GPT_4_32K]: "OpenAI GPT-4-32k",
+};
+
 export function locationDictionary(): { [key: string]: string } {
-	return Object.keys(Location).reduce((obj, key) => {
-		obj[key] = LOCATION_SETTING[key];
+	return Object.values(Location).reduce((obj, value) => {
+		obj[value] = LOCATION_SETTING[value];
 		return obj;
 	}, {} as { [key: string]: string });
 }
 
 export function selectionDictionary(): { [key: string]: string } {
-	return Object.keys(Selection).reduce((obj, key) => {
-		obj[key] = SELECTION_SETTING[key];
+	return Object.values(Selection).reduce((obj, value) => {
+		obj[value] = SELECTION_SETTING[value];
+		return obj;
+	}, {} as { [key: string]: string });
+}
+
+export function modelDictionary(): { [key: string]: string } {
+	return Object.values(OpenAIModel).reduce((obj, value) => {
+		obj[value] = MODEL_NAMES[value];
 		return obj;
 	}, {} as { [key: string]: string });
 }

@@ -2,6 +2,7 @@ import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import AIEditor from "src/main";
 import { UserAction, Selection, Location } from "src/action";
 import { ActionEditModal } from "./action_editor";
+import { OpenAIModel } from "./llm/openai_llm";
 
 const DEFAULT_ACTION: UserAction = {
 	name: "Action {{index}}",
@@ -10,6 +11,7 @@ const DEFAULT_ACTION: UserAction = {
 	loc: Location.INSERT_HEAD,
 	format: "{{result}}\n",
 	modalTitle: "Check result",
+	model: OpenAIModel.GPT_3_5,
 };
 
 export interface AIEditorSettings {
