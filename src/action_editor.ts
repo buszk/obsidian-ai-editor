@@ -89,7 +89,6 @@ export class ActionEditModal extends Modal {
 				if (this.action.sel == undefined) {
 					this.action.sel = Selection.ALL;
 				}
-				console.log(this.action.sel.toString());
 				dropdown
 					.addOptions(selectionDictionary())
 					.setValue(this.action.sel.toString())
@@ -132,7 +131,6 @@ export class ActionEditModal extends Modal {
 					.setCta()
 					.onClick(async () => {
 						await this.onSave(this.action);
-						console.log(this.action);
 						this.close();
 					});
 			});
