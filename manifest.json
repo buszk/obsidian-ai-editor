@@ -1,7 +1,7 @@
 {
 	"id": "ai-editor",
 	"name": "AI Editor",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"minAppVersion": "0.15.0",
 	"description": "Empower your note editor with LLM capabilities. Customizable to work for your use cases.",
 	"author": "Zekun Shen",
