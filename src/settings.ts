@@ -93,27 +93,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		this.createButton(containerEl, action.name, "Edit", async () => {
 			const userAction = this.plugin.settings.customActions.at(index);
 			if (userAction != undefined) {
-				new ActionEditModal(
-					this.app,
-					userAction,
-					async (action: UserAction) => {
-						this.plugin.settings.customActions[index] = action;
-						await this.plugin.saveSettings();
-						this.plugin.registerActions();
-						this.display();
-					},
-					async () => {
-						const actionToDelete =
-							this.plugin.settings.customActions.at(index);
-						if (actionToDelete != undefined) {
-							this.plugin.settings.customActions.remove(
-								actionToDelete
-							);
-							await this.plugin.saveSettings();
-						}
-						this.display();
-					}
-				).open();
+				this.displayActionEditModal(userAction, index);
 			}
 		});
 	}
@@ -125,5 +105,31 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		this.plugin.settings.customActions.push(newAction);
 		await this.plugin.saveSettings();
 		this.plugin.registerActions();
+		this.displayActionEditModal(
+			newAction,
+			this.plugin.settings.customActions.length - 1
+		);
+	}
+
+	private displayActionEditModal(userAction: UserAction, index: number) {
+		new ActionEditModal(
+			this.app,
+			userAction,
+			async (action: UserAction) => {
+				this.plugin.settings.customActions[index] = action;
+				await this.plugin.saveSettings();
+				this.plugin.registerActions();
+				this.display();
+			},
+			async () => {
+				const actionToDelete =
+					this.plugin.settings.customActions.at(index);
+				if (actionToDelete != undefined) {
+					this.plugin.settings.customActions.remove(actionToDelete);
+					await this.plugin.saveSettings();
+				}
+				this.display();
+			}
+		).open();
 	}
 }
