@@ -69,7 +69,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		containerEl.createEl("h1", { text: "Custom actions" });
 		this.plugin.settings.customActions.forEach(
 			(action: UserAction, index: number) => {
-				this.newAction(containerEl, action, index);
+				this.displayAction(containerEl, action, index);
 			}
 		);
 	}
@@ -85,7 +85,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		});
 	}
 
-	newAction(
+	displayAction(
 		containerEl: HTMLElement,
 		action: UserAction,
 		index: number
