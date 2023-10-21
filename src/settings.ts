@@ -33,7 +33,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl("h1", { text: "Common Settings" });
+		containerEl.createEl("h1", { text: "General" });
 
 		new Setting(containerEl).setName("OpenAI API Key").addText((text) =>
 			text
@@ -57,10 +57,17 @@ export class AIEditorSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
-		this.createButton(containerEl, "Create custom action", "New", () => {
-			this.displayActionEditModalForNewAction();
-		});
 		containerEl.createEl("h1", { text: "Custom actions" });
+
+		this.createButton(
+			containerEl,
+			"Create custom action",
+			"New",
+			() => {
+				this.displayActionEditModalForNewAction();
+			},
+			true
+		);
 
 		for (let i = 0; i < this.plugin.settings.customActions.length; i++) {
 			this.displayActionByIndex(containerEl, i);
@@ -80,10 +87,14 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		containerEl: HTMLElement,
 		name: string,
 		buttonText: string,
-		onClickHandler: () => void
+		onClickHandler: () => void,
+		cta: boolean = false
 	): void {
 		new Setting(containerEl).setName(name).addButton((button) => {
 			button.setButtonText(buttonText).onClick(onClickHandler);
+			if (cta) {
+				button.setCta();
+			}
 		});
 	}
 
