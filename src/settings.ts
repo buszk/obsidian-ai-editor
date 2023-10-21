@@ -5,7 +5,7 @@ import { ActionEditModal } from "./action_editor";
 import { OpenAIModel } from "./llm/openai_llm";
 
 const DEFAULT_ACTION: UserAction = {
-	name: "Action {{index}}",
+	name: "Action Name",
 	prompt: "Enter your prompt",
 	sel: Selection.ALL,
 	loc: Location.INSERT_HEAD,
@@ -62,16 +62,14 @@ export class AIEditorSettingTab extends PluginSettingTab {
 			"Create custom action",
 			"New",
 			async () => {
-				await this.createAction();
-				this.display();
+				this.displayActionEditModalForNewAction();
 			}
 		);
 		containerEl.createEl("h1", { text: "Custom actions" });
-		this.plugin.settings.customActions.forEach(
-			(action: UserAction, index: number) => {
-				this.displayAction(containerEl, action, index);
-			}
-		);
+
+		for (let i = 0; i < this.plugin.settings.customActions.length; i++) {
+			this.displayActionByIndex(containerEl, i);
+		}
 	}
 
 	createButton(
@@ -85,51 +83,68 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		});
 	}
 
-	displayAction(
-		containerEl: HTMLElement,
-		action: UserAction,
+	displayActionByIndex(containerEl: HTMLElement, index: number): void {
+		const userAction = this.plugin.settings.customActions.at(index);
+		if (userAction != undefined) {
+			this.createButton(
+				containerEl,
+				userAction.name,
+				"Edit",
+				async () => {
+					this.displayActionEditModalByActionAndIndex(
+						userAction,
+						index
+					);
+				}
+			);
+		}
+	}
+
+	private displayActionEditModalForNewAction() {
+		new ActionEditModal(
+			this.app,
+			DEFAULT_ACTION,
+			async (action: UserAction) => {
+				this.plugin.settings.customActions.push(action);
+				await this.saveSettingsAndRefresh();
+			},
+			() => {}
+		).open();
+	}
+
+	private displayActionEditModalByActionAndIndex(
+		userAction: UserAction,
 		index: number
-	): void {
-		this.createButton(containerEl, action.name, "Edit", async () => {
-			const userAction = this.plugin.settings.customActions.at(index);
-			if (userAction != undefined) {
-				this.displayActionEditModal(userAction, index);
-			}
-		});
-	}
-
-	async createAction() {
-		let newAction = { ...DEFAULT_ACTION };
-		const rand = Math.floor(Math.random() * 999 + 1);
-		newAction.name = newAction.name.replace("{{index}}", rand.toString());
-		this.plugin.settings.customActions.push(newAction);
-		await this.plugin.saveSettings();
-		this.plugin.registerActions();
-		this.displayActionEditModal(
-			newAction,
-			this.plugin.settings.customActions.length - 1
-		);
-	}
-
-	private displayActionEditModal(userAction: UserAction, index: number) {
+	) {
 		new ActionEditModal(
 			this.app,
 			userAction,
 			async (action: UserAction) => {
-				this.plugin.settings.customActions[index] = action;
-				await this.plugin.saveSettings();
-				this.plugin.registerActions();
-				this.display();
+				await this.saveUserActionAndRefresh(index, action);
 			},
 			async () => {
-				const actionToDelete =
-					this.plugin.settings.customActions.at(index);
-				if (actionToDelete != undefined) {
-					this.plugin.settings.customActions.remove(actionToDelete);
-					await this.plugin.saveSettings();
-				}
-				this.display();
+				await this.deleteUserActionAndRefresh(index);
 			}
 		).open();
+	}
+
+	private async deleteUserActionAndRefresh(index: number) {
+		const actionToDelete = this.plugin.settings.customActions.at(index);
+		if (actionToDelete != undefined) {
+			this.plugin.settings.customActions.remove(actionToDelete);
+			await this.saveSettingsAndRefresh();
+		}
+		this.display();
+	}
+
+	private async saveUserActionAndRefresh(index: number, action: UserAction) {
+		this.plugin.settings.customActions[index] = action;
+		await this.saveSettingsAndRefresh();
+	}
+
+	private async saveSettingsAndRefresh() {
+		await this.plugin.saveSettings();
+		this.plugin.registerActions();
+		this.display();
 	}
 }
