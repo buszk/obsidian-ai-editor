@@ -57,14 +57,9 @@ export class AIEditorSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
-		this.createButton(
-			containerEl,
-			"Create custom action",
-			"New",
-			async () => {
-				this.displayActionEditModalForNewAction();
-			}
-		);
+		this.createButton(containerEl, "Create custom action", "New", () => {
+			this.displayActionEditModalForNewAction();
+		});
 		containerEl.createEl("h1", { text: "Custom actions" });
 
 		for (let i = 0; i < this.plugin.settings.customActions.length; i++) {
@@ -72,32 +67,24 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		}
 	}
 
+	displayActionByIndex(containerEl: HTMLElement, index: number): void {
+		const userAction = this.plugin.settings.customActions.at(index);
+		if (userAction != undefined) {
+			this.createButton(containerEl, userAction.name, "Edit", () => {
+				this.displayActionEditModalByActionAndIndex(userAction, index);
+			});
+		}
+	}
+
 	createButton(
 		containerEl: HTMLElement,
 		name: string,
 		buttonText: string,
-		onClickHandler: () => Promise<void>
+		onClickHandler: () => void
 	): void {
 		new Setting(containerEl).setName(name).addButton((button) => {
 			button.setButtonText(buttonText).onClick(onClickHandler);
 		});
-	}
-
-	displayActionByIndex(containerEl: HTMLElement, index: number): void {
-		const userAction = this.plugin.settings.customActions.at(index);
-		if (userAction != undefined) {
-			this.createButton(
-				containerEl,
-				userAction.name,
-				"Edit",
-				async () => {
-					this.displayActionEditModalByActionAndIndex(
-						userAction,
-						index
-					);
-				}
-			);
-		}
 	}
 
 	private displayActionEditModalForNewAction() {
