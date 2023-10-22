@@ -1,6 +1,6 @@
 import { UserAction, Selection, Location } from "src/action";
 import { ConfirmModal } from "src/confirm";
-import { App, Editor, MarkdownView, Notice } from "obsidian";
+import { App, Editor, MarkdownView, Notice, TFile, Vault } from "obsidian";
 import { AIEditorSettings } from "src/settings";
 import { LLMFactory } from "./llm/factory";
 
@@ -32,8 +32,14 @@ export class ActionHandler {
 		}
 	}
 
-	addToNote(loc: Location, text: string, editor: Editor) {
-		switch (loc) {
+	async addToNote(
+		location: Location,
+		text: string,
+		editor: Editor,
+		vault?: Vault,
+		locationExtra?: { fileName: string }
+	) {
+		switch (location) {
 			case Location.INSERT_HEAD:
 				editor.setCursor(0, 0);
 				editor.replaceRange(text, editor.getCursor());
@@ -49,9 +55,24 @@ export class ActionHandler {
 			case Location.REPLACE_CURRENT:
 				editor.replaceSelection(text);
 				break;
+			case Location.APPEND_TO_FILE:
+				let fileName = locationExtra?.fileName;
+				if (vault && fileName) {
+					await this.appendToFileInVault(vault, fileName, text);
+				}
+				break;
 			default:
 				throw "Location not implemented";
 		}
+	}
+
+	private async appendToFileInVault(
+		vault: Vault,
+		fileName: string,
+		text: string
+	) {
+		let file: TFile = await getFile(vault, fileName);
+		vault.append(file, text);
 	}
 
 	async process(
@@ -71,8 +92,14 @@ export class ActionHandler {
 			app,
 			action.modalTitle,
 			(text: string) => action.format.replace("{{result}}", text),
-			(result: string) => {
-				this.addToNote(action.loc, result, editor);
+			async (result: string) => {
+				await this.addToNote(
+					action.loc,
+					result,
+					editor,
+					view.file?.vault,
+					action.locationExtra
+				);
 			}
 		);
 		let modalDisplayed = false;
@@ -94,5 +121,16 @@ export class ActionHandler {
 			new Notice(`Autocomplete error:\n${error}`);
 		}
 		spinner.remove();
+	}
+}
+
+async function getFile(vault: Vault, fileName: string) {
+	let file = vault.getAbstractFileByPath(fileName);
+	if (file == null) {
+		return await vault.create(fileName, "");
+	} else if (file instanceof TFile) {
+		return file;
+	} else {
+		throw "Not a file path";
 	}
 }

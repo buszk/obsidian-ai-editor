@@ -9,6 +9,7 @@ export enum Location {
 	INSERT_HEAD = "INSERT_HEAD",
 	APPEND_BOTTOM = "APPEND_BOTTOM",
 	APPEND_CURRENT = "APPEND_CURRENT",
+	APPEND_TO_FILE = "APPEND_TO_FILE",
 	REPLACE_CURRENT = "REPLACE_CURRENT",
 }
 
@@ -19,6 +20,7 @@ export interface UserAction {
 	prompt: string;
 	sel: Selection;
 	loc: Location;
+	locationExtra?: { fileName: string };
 	format: string;
 	modalTitle: string;
 	model: Model;
@@ -36,6 +38,7 @@ const LOCATION_SETTING: { [key: string]: string } = {
 	[Location.APPEND_CURRENT.toString()]:
 		"Append to the end of current selection",
 	[Location.REPLACE_CURRENT.toString()]: "Replace the current selection",
+	[Location.APPEND_TO_FILE.toString()]: "Append to a file speicied below",
 };
 
 const MODEL_NAMES: { [key: string]: string } = {

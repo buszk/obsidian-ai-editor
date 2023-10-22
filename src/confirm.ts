@@ -6,13 +6,13 @@ export class ConfirmModal extends Modal {
 	generated: string;
 	editMode: boolean = false;
 
-	onAccept: (result: string) => void;
+	onAccept:  (result: string) => Promise<void>;
 
 	constructor(
 		app: App,
 		title: string,
 		format: (generated: string) => string,
-		onAccept: (result: string) => void,
+		onAccept:  (result: string) => Promise<void>,
 		initial_text: string = ""
 	) {
 		super(app);
@@ -50,9 +50,9 @@ export class ConfirmModal extends Modal {
 				btn
 					.setButtonText("Add to Note")
 					.setCta()
-					.onClick(() => {
+					.onClick(async () => {
 						this.close();
-						this.onAccept(textEl.innerText);
+						await this.onAccept(textEl.innerText);
 					})
 			)
 			.addButton((btn) =>

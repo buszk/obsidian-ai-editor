@@ -27,6 +27,7 @@ export class ActionEditModal extends Modal {
 	}
 	onOpen() {
 		const { contentEl } = this;
+		contentEl.empty();
 
 		contentEl.createEl("h1", { text: "Edit Action" });
 
@@ -93,8 +94,7 @@ export class ActionEditModal extends Modal {
 					.addOptions(selectionDictionary())
 					.setValue(this.action.sel.toString())
 					.onChange((value) => {
-						this.action.sel =
-							value as  Selection;
+						this.action.sel = value as Selection;
 					});
 			});
 		new Setting(contentEl)
@@ -110,10 +110,24 @@ export class ActionEditModal extends Modal {
 					.addOptions(locationDictionary())
 					.setValue(this.action.loc)
 					.onChange((value) => {
-						this.action.loc =
-							value as  Location;
+						this.action.loc = value as Location;
+						this.onOpen();
 					});
 			});
+		if (this.action.loc == Location.APPEND_TO_FILE) {
+			new Setting(contentEl)
+				.setName("File name")
+				.setDesc("File name to append to")
+				.addText((text) => {
+					text.setPlaceholder("Enter file name")
+						.setValue(this.action.locationExtra?.fileName || "")
+						.onChange(async (value) => {
+							this.action.locationExtra = {
+								fileName: value,
+							};
+						});
+				});
+		}
 
 		new Setting(contentEl)
 			.addButton((button) => {
