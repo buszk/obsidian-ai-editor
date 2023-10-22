@@ -132,7 +132,6 @@ export class AIEditorSettingTab extends PluginSettingTab {
 			this.plugin.settings.customActions.remove(actionToDelete);
 			await this.saveSettingsAndRefresh();
 		}
-		this.display();
 	}
 
 	private async saveUserActionAndRefresh(index: number, action: UserAction) {
