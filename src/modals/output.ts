@@ -1,6 +1,6 @@
 import { App, Modal, Setting } from "obsidian";
 
-export class ConfirmModal extends Modal {
+export class OutputModal extends Modal {
 	title: string;
 	format: (generated: string) => string;
 	generated: string;

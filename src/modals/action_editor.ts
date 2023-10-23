@@ -6,8 +6,8 @@ import {
 	Location,
 	locationDictionary,
 	modelDictionary,
-} from "./action";
-import { OpenAIModel } from "./llm/openai_llm";
+} from "../action";
+import { OpenAIModel } from "../llm/openai_llm";
 
 export class ActionEditModal extends Modal {
 	action: UserAction;

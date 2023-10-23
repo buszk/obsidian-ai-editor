@@ -1,5 +1,5 @@
 import { UserAction, Selection, Location } from "src/action";
-import { ConfirmModal } from "src/confirm";
+import { OutputModal } from "src/modals/output";
 import { App, Editor, MarkdownView, Notice, TFile, Vault } from "obsidian";
 import { AIEditorSettings } from "src/settings";
 import { LLMFactory } from "./llm/factory";
@@ -88,7 +88,7 @@ export class ActionHandler {
 
 		const spinner = view.contentEl.createEl("div", { cls: "loader" });
 
-		const modal = new ConfirmModal(
+		const modal = new OutputModal(
 			app,
 			action.modalTitle,
 			(text: string) => action.format.replace("{{result}}", text),

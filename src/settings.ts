@@ -1,7 +1,7 @@
 import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import AIEditor from "src/main";
 import { UserAction, Selection, Location } from "src/action";
-import { ActionEditModal } from "./action_editor";
+import { ActionEditModal } from "./modals/action_editor";
 import { OpenAIModel } from "./llm/openai_llm";
 
 const DEFAULT_ACTION: UserAction = {
