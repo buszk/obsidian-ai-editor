@@ -8,17 +8,18 @@ import {
 	modelDictionary,
 } from "../action";
 import { OpenAIModel } from "../llm/openai_llm";
+import { DeletionModal } from "./deletion";
 
 export class ActionEditModal extends Modal {
 	action: UserAction;
 	onSave: (userAction: UserAction) => void;
-	onDelete: () => void;
+	onDelete?: () => void;
 
 	constructor(
 		app: App,
 		user_action: UserAction,
 		onSave: (userAction: UserAction) => void,
-		onDelete: () => void
+		onDelete?: () => void
 	) {
 		super(app);
 		this.action = user_action;
@@ -131,13 +132,22 @@ export class ActionEditModal extends Modal {
 
 		new Setting(contentEl)
 			.addButton((button) => {
-				button
-					.setButtonText("Delete")
-					.setWarning()
-					.onClick(async () => {
-						this.onDelete();
+				if (this.onDelete) {
+					let onDelete = this.onDelete;
+					button
+						.setButtonText("Delete")
+						.setWarning()
+						.onClick(async () => {
+							new DeletionModal(this.app, () => {
+								onDelete();
+								this.close();
+							}).open();
+						});
+				} else {
+					button.setButtonText("Ignore").onClick(() => {
 						this.close();
 					});
+				}
 			})
 			.addButton((button) => {
 				button

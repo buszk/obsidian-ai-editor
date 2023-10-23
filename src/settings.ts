@@ -106,7 +106,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 				this.plugin.settings.customActions.push(action);
 				await this.saveSettingsAndRefresh();
 			},
-			() => {}
+			undefined
 		).open();
 	}
 
