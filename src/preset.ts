@@ -41,10 +41,22 @@ export const HASHTAG_ACTION: UserAction = {
 	model: OpenAIModel.GPT_3_5,
 };
 
+export const APPEND_TO_TASK_LIST: UserAction = {
+	name: "Append to task list",
+	prompt: "Summarize the following as an actionable task in a short sentence",
+	sel: Selection.ALL,
+	loc: Location.APPEND_TO_FILE,
+	locationExtra: { fileName: "Tasks.md" },
+	format: "\n- [ ] {{result}}",
+	modalTitle: "Check result",
+	model: OpenAIModel.GPT_3_5,
+};
+
 // Default actions
 export const DEFAULT_ACTIONS: Array<UserAction> = [
 	SUMMARY_DOC_ACTION,
 	COMPLETION_ACTION,
 	REWRITE_ACTION,
 	HASHTAG_ACTION,
+	APPEND_TO_TASK_LIST,
 ];
