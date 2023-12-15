@@ -7,8 +7,10 @@ export enum OpenAIModel {
 	GPT_3_5 = "gpt-3.5-turbo",
 	GPT_3_5_16k = "gpt-3.5-turbo-16k",
 	GPT_3_5_INSTRUCT = "gpt-3.5-turbo-instruct",
+	GPT_3_5_TURBO_PREVIEW = "gpt-3.5-turbo-1106",
 	GPT_4 = "gpt-4",
 	GPT_4_32K = "gpt-4-32k",
+	GPT_4_TURBO_PREVIEW = "gpt-4-1106-preview",
 }
 
 export class OpenAILLM extends LLM {
@@ -16,7 +18,7 @@ export class OpenAILLM extends LLM {
 
 	constructor(
 		apiKey: string,
-		modelName: OpenAIModel = OpenAIModel.GPT_3_5,
+		modelName: OpenAIModel = OpenAIModel.GPT_3_5_TURBO_PREVIEW,
 		temperature: number = 0.7
 	) {
 		super();
@@ -40,6 +42,7 @@ export class OpenAILLM extends LLM {
 		text: string,
 		callback: (text: string) => void
 	): Promise<void> {
+		// use splitter
 		await this.llm.call(text, {
 			timeout: queryTimeout,
 			callbacks: [{ handleLLMNewToken: callback }],

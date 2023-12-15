@@ -47,7 +47,7 @@ export class ActionEditModal extends Modal {
 			.setDesc("What model would be used to process your input")
 			.addDropdown((dropdown) => {
 				if (this.action.model == undefined) {
-					this.action.model = OpenAIModel.GPT_3_5;
+					this.action.model = OpenAIModel.GPT_3_5_TURBO_PREVIEW;
 				}
 				dropdown
 					.addOptions(modelDictionary())

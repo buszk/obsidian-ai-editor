@@ -8,7 +8,7 @@ export const SUMMARY_DOC_ACTION: UserAction = {
 	loc: Location.INSERT_HEAD,
 	format: "**Summary**: {{result}}\n\n",
 	modalTitle: "Check summary",
-	model: OpenAIModel.GPT_3_5,
+	model: OpenAIModel.GPT_3_5_TURBO_PREVIEW,
 };
 
 export const COMPLETION_ACTION: UserAction = {
@@ -18,7 +18,7 @@ export const COMPLETION_ACTION: UserAction = {
 	loc: Location.APPEND_CURRENT,
 	format: "{{result}}",
 	modalTitle: "Check result",
-	model: OpenAIModel.GPT_3_5,
+	model: OpenAIModel.GPT_3_5_TURBO_PREVIEW,
 };
 
 export const REWRITE_ACTION: UserAction = {
@@ -28,7 +28,7 @@ export const REWRITE_ACTION: UserAction = {
 	loc: Location.REPLACE_CURRENT,
 	format: "{{result}}",
 	modalTitle: "Check result",
-	model: OpenAIModel.GPT_3_5,
+	model: OpenAIModel.GPT_3_5_TURBO_PREVIEW,
 };
 
 export const HASHTAG_ACTION: UserAction = {
@@ -38,7 +38,7 @@ export const HASHTAG_ACTION: UserAction = {
 	loc: Location.APPEND_BOTTOM,
 	format: "\n{{result}}",
 	modalTitle: "Check result",
-	model: OpenAIModel.GPT_3_5,
+	model: OpenAIModel.GPT_3_5_TURBO_PREVIEW,
 };
 
 export const APPEND_TO_TASK_LIST: UserAction = {
@@ -49,7 +49,7 @@ export const APPEND_TO_TASK_LIST: UserAction = {
 	locationExtra: { fileName: "Tasks.md" },
 	format: "\n- [ ] {{result}}",
 	modalTitle: "Check result",
-	model: OpenAIModel.GPT_3_5,
+	model: OpenAIModel.GPT_3_5_TURBO_PREVIEW,
 };
 
 // Default actions

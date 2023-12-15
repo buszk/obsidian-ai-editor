@@ -3,6 +3,7 @@ import { OutputModal } from "src/modals/output";
 import { App, Editor, MarkdownView, Notice, TFile, Vault } from "obsidian";
 import { AIEditorSettings } from "src/settings";
 import { LLMFactory } from "./llm/factory";
+import { CharacterTextSplitter } from "langchain/text_splitter";
 
 export class ActionHandler {
 	llmFactory: LLMFactory;

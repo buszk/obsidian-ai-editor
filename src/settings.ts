@@ -11,7 +11,7 @@ const DEFAULT_ACTION: UserAction = {
 	loc: Location.INSERT_HEAD,
 	format: "{{result}}\n",
 	modalTitle: "Check result",
-	model: OpenAIModel.GPT_3_5,
+	model: OpenAIModel.GPT_3_5_TURBO_PREVIEW,
 };
 
 export interface AIEditorSettings {

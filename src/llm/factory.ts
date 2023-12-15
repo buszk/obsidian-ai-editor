@@ -18,7 +18,7 @@ export class LLMFactory {
 
 		if (userAction.model == undefined) {
             new Notice("Model not set, using default");
-			userAction.model = OpenAIModel.GPT_3_5;
+			userAction.model = OpenAIModel.GPT_3_5_TURBO_PREVIEW;
 		}
 
         if (Object.values(OpenAIModel).includes(userAction.model as any)) {

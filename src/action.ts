@@ -47,6 +47,8 @@ const MODEL_NAMES: { [key: string]: string } = {
 	[OpenAIModel.GPT_3_5_INSTRUCT]: "OpenAI GPT-3.5-instruct",
 	[OpenAIModel.GPT_4]: "OpenAI GPT-4",
 	[OpenAIModel.GPT_4_32K]: "OpenAI GPT-4-32k",
+	[OpenAIModel.GPT_3_5_TURBO_PREVIEW]: "OpenAI GPT-3.5-turbo-preview",
+	[OpenAIModel.GPT_4_TURBO_PREVIEW]: "OpenAI GPT-4-turbo-preview",
 };
 
 export function locationDictionary(): { [key: string]: string } {
