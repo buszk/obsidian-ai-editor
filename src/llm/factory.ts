@@ -4,6 +4,7 @@ import { LLM } from "./base";
 import { DummyLLM } from "./dummy_llm";
 import { OpenAILLM, OpenAIModel } from "./openai_llm";
 import { Notice } from "obsidian";
+import { DEFAULT_MODEL } from "./models";
 
 export class LLMFactory {
 	settings: AIEditorSettings;
@@ -18,7 +19,7 @@ export class LLMFactory {
 
 		if (userAction.model == undefined) {
             new Notice("Model not set, using default");
-			userAction.model = OpenAIModel.GPT_3_5_TURBO_PREVIEW;
+			userAction.model = DEFAULT_MODEL;
 		}
 
         if (Object.values(OpenAIModel).includes(userAction.model as any)) {

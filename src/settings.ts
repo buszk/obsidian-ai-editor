@@ -4,23 +4,12 @@ import {
 	UserAction,
 	Selection,
 	Location,
-	Model,
 	modelDictionary,
 } from "src/action";
 import { ActionEditModal } from "./modals/action_editor";
 import { OpenAIModel } from "./llm/openai_llm";
+import { DEFAULT_MODEL, Model } from "./llm/models";
 
-const DEFAULT_ACTION: UserAction = {
-	name: "Action Name",
-	prompt: "Enter your prompt",
-	sel: Selection.ALL,
-	loc: Location.INSERT_HEAD,
-	format: "{{result}}\n",
-	modalTitle: "Check result",
-	model: OpenAIModel.GPT_3_5_TURBO_PREVIEW,
-};
-
-const DEFAULT_MODEL: Model = OpenAIModel.GPT_3_5_TURBO_PREVIEW;
 
 export interface AIEditorSettings {
 	openAiApiKey: string;
@@ -61,6 +50,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 					.onChange((value) => {
 						this.plugin.settings.defaultModel =
 							value as OpenAIModel;
+						this.plugin.saveSettings();
 					})
 					.setValue(DEFAULT_MODEL.toString())
 			);
@@ -119,9 +109,18 @@ export class AIEditorSettingTab extends PluginSettingTab {
 	}
 
 	private displayActionEditModalForNewAction() {
+		const DUMMY_ACTION: UserAction = {
+			name: "Action Name",
+			prompt: "Enter your prompt",
+			sel: Selection.ALL,
+			loc: Location.INSERT_HEAD,
+			format: "{{result}}\n",
+			modalTitle: "Check result",
+			model: this.plugin.settings.defaultModel,
+		};
 		new ActionEditModal(
 			this.app,
-			DEFAULT_ACTION,
+			DUMMY_ACTION,
 			async (action: UserAction) => {
 				this.plugin.settings.customActions.push(action);
 				await this.saveSettingsAndRefresh();

@@ -1,3 +1,4 @@
+import { Model } from "./llm/models";
 import { OpenAIModel } from "./llm/openai_llm";
 
 export enum Selection {
@@ -13,7 +14,6 @@ export enum Location {
 	REPLACE_CURRENT = "REPLACE_CURRENT",
 }
 
-export type Model = OpenAIModel | {};
 
 export interface UserAction {
 	name: string;

@@ -2,11 +2,12 @@ import { ActionHandler } from "src/handler";
 import { Editor, MarkdownView, Plugin } from "obsidian";
 import { AIEditorSettingTab, AIEditorSettings } from "src/settings";
 import { DEFAULT_ACTIONS } from "src/preset";
-import { UserAction } from "src/action";
+import { DEFAULT_MODEL } from "./llm/models";
 
 const DEFAULT_SETTINGS: AIEditorSettings = {
 	openAiApiKey: "",
 	testingMode: false,
+	defaultModel: DEFAULT_MODEL,
 	customActions: DEFAULT_ACTIONS,
 };
 
