@@ -1,12 +1,12 @@
 {
 	"name": "obsidian-ai-editor",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"description": "AI-powered Text Editor",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json package.json"
+		"version": "node version-bump.mjs && npm i --package-lock-only && git add manifest.json versions.json package.json package-lock.json"
 	},
 	"keywords": [],
 	"author": "Zekun Shen",
