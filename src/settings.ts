@@ -1,6 +1,12 @@
 import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import AIEditor from "src/main";
-import { UserAction, Selection, Location } from "src/action";
+import {
+	UserAction,
+	Selection,
+	Location,
+	Model,
+	modelDictionary,
+} from "src/action";
 import { ActionEditModal } from "./modals/action_editor";
 import { OpenAIModel } from "./llm/openai_llm";
 
@@ -14,9 +20,12 @@ const DEFAULT_ACTION: UserAction = {
 	model: OpenAIModel.GPT_3_5_TURBO_PREVIEW,
 };
 
+const DEFAULT_MODEL: Model = OpenAIModel.GPT_3_5_TURBO_PREVIEW;
+
 export interface AIEditorSettings {
 	openAiApiKey: string;
 	testingMode: boolean;
+	defaultModel: Model;
 	customActions: Array<UserAction>;
 }
 
@@ -44,6 +53,17 @@ export class AIEditorSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				})
 		);
+		new Setting(containerEl)
+			.setName("Default LLM model")
+			.addDropdown((dropdown) =>
+				dropdown
+					.addOptions(modelDictionary())
+					.onChange((value) => {
+						this.plugin.settings.defaultModel =
+							value as OpenAIModel;
+					})
+					.setValue(DEFAULT_MODEL.toString())
+			);
 		new Setting(containerEl)
 			.setName("Testing mode")
 			.setDesc(
