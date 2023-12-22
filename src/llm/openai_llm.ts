@@ -1,7 +1,8 @@
 import { OpenAI } from "langchain/llms/openai";
 import { LLM } from "./base";
+import { Notice } from "obsidian";
 
-const queryTimeout = 15000;
+const queryTimeout = 0;
 
 export enum OpenAIModel {
 	GPT_3_5 = "gpt-3.5-turbo",
@@ -42,10 +43,44 @@ export class OpenAILLM extends LLM {
 		text: string,
 		callback: (text: string) => void
 	): Promise<void> {
-		// use splitter
-		await this.llm.call(text, {
-			timeout: queryTimeout,
-			callbacks: [{ handleLLMNewToken: callback }],
+		let start_time = new Date().getTime();
+		var last_tick = new Date().getTime();
+		var has_timeout = false;
+
+		// define a wrapper function to handle timeout
+		function callback_wrapper(text: string): void {
+			// Once start the query promise, we cannot cancel it.
+			// Ignore the callback if timeout has already happened.
+			if (has_timeout) {
+				return;
+			}
+			last_tick = new Date().getTime();
+			callback(text);
+		}
+
+		let promise = this.llm.call(text, {
+			callbacks: [{ handleLLMNewToken: callback_wrapper }],
+		});
+
+		return new Promise<void>((resolve, reject) => {
+			const intervalId = setInterval(() => {
+				let now = new Date().getTime();
+				new Notice("now: " + (now - start_time )+ " last_tick: " + (last_tick - start_time))
+				if (now - last_tick > queryTimeout) {
+					has_timeout = true;
+					clearInterval(intervalId);
+					reject("Timeout: last streaming output is " + (now - last_tick) + "ms ago.");
+				}
+			}, 1000);
+			promise
+				.then((_) => {
+					clearInterval(intervalId);
+					resolve();
+				})
+				.catch((error) => {
+					clearInterval(intervalId);
+					reject(error);
+				});
 		});
 	}
 }
