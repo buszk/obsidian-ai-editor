@@ -10,7 +10,7 @@ export class DummyLLM extends LLM {
 		});
 	}
 
-	autocompleteStreaming(
+	autocompleteStreamingInner(
 		_: string,
 		callback: (text: string) => void
 	): Promise<void> {
