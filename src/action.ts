@@ -38,7 +38,7 @@ const LOCATION_SETTING: { [key: string]: string } = {
 	[Location.APPEND_CURRENT.toString()]:
 		"Append to the end of current selection",
 	[Location.REPLACE_CURRENT.toString()]: "Replace the current selection",
-	[Location.APPEND_TO_FILE.toString()]: "Append to a file speicied below",
+	[Location.APPEND_TO_FILE.toString()]: "Append to a file specified below",
 };
 
 const MODEL_NAMES: { [key: string]: string } = {
