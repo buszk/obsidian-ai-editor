@@ -1,14 +1,14 @@
-import { App, Notice, PluginSettingTab, Setting } from "obsidian";
-import AIEditor from "src/main";
+import { App, PluginSettingTab, Setting } from "obsidian";
 import {
-	UserAction,
-	Selection,
 	Location,
+	Selection,
+	UserAction,
 	modelDictionary,
 } from "src/action";
-import { ActionEditModal } from "./modals/action_editor";
+import AIEditor from "src/main";
+import { Model } from "./llm/models";
 import { OpenAIModel } from "./llm/openai_llm";
-import { DEFAULT_MODEL, Model } from "./llm/models";
+import { ActionEditModal } from "./modals/action_editor";
 
 
 export interface AIEditorSettings {
@@ -52,7 +52,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 							value as OpenAIModel;
 						this.plugin.saveSettings();
 					})
-					.setValue(DEFAULT_MODEL.toString())
+					.setValue(this.plugin.settings.defaultModel.toString())
 			);
 		new Setting(containerEl)
 			.setName("Testing mode")
@@ -98,7 +98,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		name: string,
 		buttonText: string,
 		onClickHandler: () => void,
-		cta: boolean = false
+		cta = false
 	): void {
 		new Setting(containerEl).setName(name).addButton((button) => {
 			button.setButtonText(buttonText).onClick(onClickHandler);
