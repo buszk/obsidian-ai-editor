@@ -2,13 +2,14 @@ import { OpenAI } from "langchain/llms/openai";
 import { LLM } from "./base";
 
 export enum OpenAIModel {
-	GPT_3_5 = "gpt-3.5-turbo",
 	GPT_3_5_16k = "gpt-3.5-turbo-16k",
 	GPT_3_5_INSTRUCT = "gpt-3.5-turbo-instruct",
 	GPT_3_5_TURBO_PREVIEW = "gpt-3.5-turbo-1106",
+	GPT_3_5_TURBO= "gpt-3.5-turbo",
 	GPT_4 = "gpt-4",
 	GPT_4_32K = "gpt-4-32k",
 	GPT_4_TURBO_PREVIEW = "gpt-4-1106-preview",
+	GPT_4_TURBO = "gpt-4-turbo",
 }
 
 export class OpenAILLM extends LLM {

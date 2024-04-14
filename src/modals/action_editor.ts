@@ -9,19 +9,23 @@ import {
 } from "../action";
 import { OpenAIModel } from "../llm/openai_llm";
 import { DeletionModal } from "./deletion";
+import AIEditor from "src/main";
 
 export class ActionEditModal extends Modal {
 	action: UserAction;
+	plugin: AIEditor;
 	onSave: (userAction: UserAction) => void;
 	onDelete?: () => void;
 
 	constructor(
 		app: App,
+		plugin: AIEditor,
 		user_action: UserAction,
 		onSave: (userAction: UserAction) => void,
 		onDelete?: () => void
 	) {
 		super(app);
+		this.plugin = plugin;
 		this.action = user_action;
 		this.onSave = onSave;
 		this.onDelete = onDelete;
@@ -47,7 +51,8 @@ export class ActionEditModal extends Modal {
 			.setDesc("What model would be used to process your input")
 			.addDropdown((dropdown) => {
 				if (this.action.model == undefined) {
-					this.action.model = OpenAIModel.GPT_3_5_TURBO_PREVIEW;
+					this.action.model =
+						this.plugin.settings.defaultModel.toString();
 				}
 				dropdown
 					.addOptions(modelDictionary())

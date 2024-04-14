@@ -120,6 +120,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 		};
 		new ActionEditModal(
 			this.app,
+			this.plugin,
 			DUMMY_ACTION,
 			async (action: UserAction) => {
 				this.plugin.settings.customActions.push(action);
@@ -135,6 +136,7 @@ export class AIEditorSettingTab extends PluginSettingTab {
 	) {
 		new ActionEditModal(
 			this.app,
+			this.plugin,
 			userAction,
 			async (action: UserAction) => {
 				await this.saveUserActionAndRefresh(index, action);
