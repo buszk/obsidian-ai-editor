@@ -2,14 +2,14 @@ import { OpenAI } from "langchain/llms/openai";
 import { LLM } from "./base";
 
 export enum OpenAIModel {
-	GPT_3_5_16k = "gpt-3.5-turbo-16k",
-	GPT_3_5_INSTRUCT = "gpt-3.5-turbo-instruct",
-	GPT_3_5_TURBO_PREVIEW = "gpt-3.5-turbo-1106",
-	GPT_3_5_TURBO= "gpt-3.5-turbo",
-	GPT_4 = "gpt-4",
-	GPT_4_32K = "gpt-4-32k",
-	GPT_4_TURBO_PREVIEW = "gpt-4-1106-preview",
-	GPT_4_TURBO = "gpt-4-turbo",
+	// GPT-3.5 Models
+	GPT_3_5_TURBO = "gpt-3.5-turbo",  
+	GPT_3_5_TURBO_0125 = "gpt-3.5-turbo-0125", 
+	
+	// GPT-4 Models
+	GPT_4 = "gpt-4",  // Base GPT-4
+	GPT_4_TURBO = "gpt-4-turbo-preview",  // Latest GPT-4
+	GPT_4_1106_PREVIEW = "gpt-4-1106-preview",  // Cost-effective GPT-4
 }
 
 export class OpenAILLM extends LLM {
@@ -17,7 +17,7 @@ export class OpenAILLM extends LLM {
 
 	constructor(
 		apiKey: string,
-		modelName: OpenAIModel = OpenAIModel.GPT_3_5_TURBO_PREVIEW,
+		modelName: OpenAIModel = OpenAIModel.GPT_3_5_TURBO,
 		temperature: number = 0.7
 	) {
 		super();
