@@ -3,65 +3,73 @@ import { Editor, MarkdownView, Plugin } from "obsidian";
 import { AIEditorSettingTab, AIEditorSettings } from "src/settings";
 import { DEFAULT_ACTIONS } from "src/preset";
 import { DEFAULT_MODEL } from "./llm/models";
+import { LLMProvider } from "./llm/providers";
 
 const DEFAULT_SETTINGS: AIEditorSettings = {
-	openAiApiKey: "",
-	testingMode: false,
-	defaultModel: DEFAULT_MODEL,
-	customActions: DEFAULT_ACTIONS,
+    openAiApiKey: "",
+    testingMode: false,
+    defaultModel: DEFAULT_MODEL,
+    customActions: DEFAULT_ACTIONS,
+    providerSettings: {
+        provider: LLMProvider.OPENAI,
+        apiKey: "",
+        baseUrl: "",
+        organizationId: "",
+        projectId: ""
+    }
 };
 
 export default class AIEditor extends Plugin {
-	settings: AIEditorSettings;
+    settings: AIEditorSettings;
 
-	registerActions() {
-		let actions = this.settings.customActions;
-		let handler = new ActionHandler(this.settings);
-		actions.forEach((action, i) => {
-			this.addCommand({
-				// When user edit the settings, this method is called to updated command.
-				// Use index as id to avoid creating duplicates
-				id: `user-action-${i}`,
-				name: action.name,
-				editorCallback: async (editor: Editor, view: MarkdownView) => {
-					await handler.process(
-						this.app,
-						this.settings,
-						action,
-						editor,
-						view
-					);
-				},
-			});
-		});
-	}
+    registerActions() {
+        let actions = this.settings.customActions;
+        let handler = new ActionHandler(this.settings);
+        actions.forEach((action, i) => {
+            this.addCommand({
+                // When user edit the settings, this method is called to updated command.
+                // Use index as id to avoid creating duplicates
+                id: `user-action-${i}`,
+                name: action.name,
+                editorCallback: async (editor: Editor, view: MarkdownView) => {
+                    await handler.process(
+                        this.app,
+                        this.settings,
+                        action,
+                        editor,
+                        view
+                    );
+                },
+            });
+        });
+    }
 
-	async onload() {
-		await this.loadSettings();
-		this.addCommand({
-			id: "reload-commands",
-			name: "Reload commands",
-			callback: () => {
-				this.registerActions();
-			},
-		});
-		this.registerActions();
+    async onload() {
+        await this.loadSettings();
+        this.addCommand({
+            id: "reload-commands",
+            name: "Reload commands",
+            callback: () => {
+                this.registerActions();
+            },
+        });
+        this.registerActions();
 
-		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new AIEditorSettingTab(this.app, this));
-	}
+        // This adds a settings tab so the user can configure various aspects of the plugin
+        this.addSettingTab(new AIEditorSettingTab(this.app, this));
+    }
 
-	onunload() {}
+    onunload() {}
 
-	async loadSettings() {
-		this.settings = Object.assign(
-			{},
-			DEFAULT_SETTINGS,
-			await this.loadData()
-		);
-	}
+    async loadSettings() {
+        this.settings = Object.assign(
+            {},
+            DEFAULT_SETTINGS,
+            await this.loadData()
+        );
+    }
 
-	async saveSettings() {
-		await this.saveData(this.settings);
-	}
+    async saveSettings() {
+        await this.saveData(this.settings);
+    }
 }
